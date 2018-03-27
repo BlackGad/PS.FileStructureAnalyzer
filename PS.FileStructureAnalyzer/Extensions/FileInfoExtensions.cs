@@ -250,14 +250,14 @@ namespace PS.FileStructureAnalyzer.Extensions
                 }
 
                 //Check DOS header magic number
-                if (Marshal.ReadInt16(intPtr) != Constants.PEMagic) return CompilationMode.Invalid;
+                if (Marshal.ReadInt16(intPtr) != 0x5a4d) return CompilationMode.Invalid;
 
                 // This will get the address for the WinNT header  
                 var ntHeaderAddressOffset = Marshal.ReadInt32(intPtr + 60);
 
                 // Check WinNT header signature
                 var signature = Marshal.ReadInt32(intPtr + ntHeaderAddressOffset);
-                if (signature != Constants.NTHeaderSignature) return CompilationMode.Invalid;
+                if (signature != 0x4550) return CompilationMode.Invalid;
 
                 //Determine file bitness by reading magic from IMAGE_OPTIONAL_HEADER
                 var magic = Marshal.ReadInt32(intPtr + ntHeaderAddressOffset + 24);
