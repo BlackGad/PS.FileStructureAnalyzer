@@ -260,32 +260,26 @@ namespace PS.FileStructureAnalyzer.Extensions
                 if (signature != Constants.NTHeaderSignature) return CompilationMode.Invalid;
 
                 //Determine file bitness by reading magic from IMAGE_OPTIONAL_HEADER
-                var magic = (MagicType)Marshal.ReadInt32(intPtr + ntHeaderAddressOffset + 24);
-
-                //Check magic value is one of known MagicType values
-                if (Enum.GetValues(typeof(MagicType)).OfType<MagicType>().All(v => v != magic))
-                    return CompilationMode.Invalid;
+                var magic = Marshal.ReadInt32(intPtr + ntHeaderAddressOffset + 24);
 
                 var result = CompilationMode.Invalid;
-                uint clrHeaderSize = 0;
-                switch (magic)
+                uint clrHeaderSize;
+                if (magic == 0x10b)
                 {
-                    case MagicType.IMAGE_NT_OPTIONAL_HDR32_MAGIC:
-                    {
-                        clrHeaderSize = (uint)Marshal.ReadInt32(intPtr + ntHeaderAddressOffset + 24 + 208 + 4);
-                        result |= CompilationMode.Bit32;
-                    }
-                        break;
-                    case MagicType.IMAGE_NT_OPTIONAL_HDR64_MAGIC:
-                    {
-                        clrHeaderSize = (uint)Marshal.ReadInt32(intPtr + ntHeaderAddressOffset + 24 + 224 + 4);
-                        result |= CompilationMode.Bit64;
-                    }
-                        break;
+                    clrHeaderSize = (uint)Marshal.ReadInt32(intPtr + ntHeaderAddressOffset + 24 + 208 + 4);
+                    result |= CompilationMode.Bit32;
                 }
+                else if (magic == 0x20b)
+                {
+                    clrHeaderSize = (uint)Marshal.ReadInt32(intPtr + ntHeaderAddressOffset + 24 + 224 + 4);
+                    result |= CompilationMode.Bit64;
+                }
+                else return CompilationMode.Invalid;
+
                 result |= clrHeaderSize != 0
                     ? CompilationMode.CLR
                     : CompilationMode.Native;
+
                 return result;
             }
             finally
