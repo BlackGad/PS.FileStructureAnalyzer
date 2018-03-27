@@ -42,7 +42,7 @@ namespace PS.FileStructureAnalyzer.Extensions
                 //Determine file bitness by reading magic number from IMAGE_OPTIONAL_HEADER
                 var optionalHeaderAddressOffset = Marshal.OffsetOf<IMAGE_NT_HEADERS32>(nameof(IMAGE_NT_HEADERS32.OptionalHeader)).ToInt32();
                 var magicValueAddressOffset = Marshal.OffsetOf<IMAGE_OPTIONAL_HEADER32>(nameof(IMAGE_OPTIONAL_HEADER32.Magic)).ToInt32();
-                var magic = (MagicType)Marshal.ReadInt32(ntHeaderAddress + optionalHeaderAddressOffset + magicValueAddressOffset);
+                var magic = (MagicType)Marshal.ReadInt16(ntHeaderAddress + optionalHeaderAddressOffset + magicValueAddressOffset);
                 //Check magic value is one of known MagicType values
                 if (Enum.GetValues(typeof(MagicType)).OfType<MagicType>().All(v => v != magic))
                 {
@@ -112,7 +112,7 @@ namespace PS.FileStructureAnalyzer.Extensions
                 if (signature != Constants.NTHeaderSignature) return CompilationMode.Invalid;
 
                 //Determine file bitness by reading magic from IMAGE_OPTIONAL_HEADER
-                var magic = (MagicType)Marshal.ReadInt32(intPtr + ntHeaderAddressOffset + 24);
+                var magic = (MagicType)Marshal.ReadInt16(intPtr + ntHeaderAddressOffset + 24);
 
                 //Check magic value is one of known MagicType values
                 if (Enum.GetValues(typeof(MagicType)).OfType<MagicType>().All(v => v != magic))
@@ -179,7 +179,7 @@ namespace PS.FileStructureAnalyzer.Extensions
                 //Determine file bitness by reading magic from IMAGE_OPTIONAL_HEADER
                 var optionalHeaderAddressOffset = Marshal.OffsetOf<IMAGE_NT_HEADERS32>(nameof(IMAGE_NT_HEADERS32.OptionalHeader)).ToInt32();
                 var magicValueAddressOffset = Marshal.OffsetOf<IMAGE_OPTIONAL_HEADER32>(nameof(IMAGE_OPTIONAL_HEADER32.Magic)).ToInt32();
-                var magic = (MagicType)Marshal.ReadInt32(ntHeaderAddress + optionalHeaderAddressOffset + magicValueAddressOffset);
+                var magic = (MagicType)Marshal.ReadInt16(ntHeaderAddress + optionalHeaderAddressOffset + magicValueAddressOffset);
 
                 //Check magic value is one of known MagicType values
                 if (Enum.GetValues(typeof(MagicType)).OfType<MagicType>().All(v => v != magic))
@@ -260,7 +260,7 @@ namespace PS.FileStructureAnalyzer.Extensions
                 if (signature != 0x4550) return CompilationMode.Invalid;
 
                 //Determine file bitness by reading magic from IMAGE_OPTIONAL_HEADER
-                var magic = Marshal.ReadInt32(intPtr + ntHeaderAddressOffset + 24);
+                var magic = Marshal.ReadInt16(intPtr + ntHeaderAddressOffset + 24);
 
                 var result = CompilationMode.Invalid;
                 uint clrHeaderSize;
