@@ -15,10 +15,6 @@ namespace PS.FileStructureAnalyzer
             try
             {
                 var filePath = args.FirstOrDefault();
-                //filePath = filePath ?? @"d:\Projects\License\LicenseEditor\LicenseEditorData\bin\x64\Debug\LicenseEditorData.dll";
-                filePath = filePath ?? @"d:\Projects\License\LicenseEditor\LicenseEditorData\bin\x86\Debug\LicenseEditorData.dll";
-                //filePath = filePath ?? @"d:\Projects\License\LicenseEditor\LicenseReader\Bin\Win32\Release\LicenseReader.dll";
-                //filePath = filePath ?? @"d:\Projects\License\LicenseEditor\LicenseReader\Bin\x64\Release\LicenseReader.dll";
                 if (string.IsNullOrWhiteSpace(filePath)) throw new ArgumentException("Invalid source file path");
                 var file = new FileInfo(filePath);
                 Console.WriteLine("Detailed method");
@@ -29,6 +25,9 @@ namespace PS.FileStructureAnalyzer
                 Console.WriteLine("-----------");
                 Console.WriteLine("Truncated method");
                 PrintCompilationMode(file.GetCompilationModeTruncated());
+                Console.WriteLine("-----------");
+                Console.WriteLine("Truncated with out dependencies method");
+                PrintCompilationMode(file.GetCompilationModeTruncatedWithExplanation());
             }
             catch (Exception e)
             {
